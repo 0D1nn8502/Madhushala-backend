@@ -133,7 +133,8 @@ authRouter.post("/signin", async (req: Request, res: Response) => {
     res.status(200).json({
       message : 'Success', 
       token, 
-      user : {
+      user : { 
+        _id: user._id,  
         username : user.username, 
         email : user.email, 
         image : user.image, 

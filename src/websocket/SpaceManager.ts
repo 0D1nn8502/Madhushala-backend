@@ -3,26 +3,28 @@ import WebSocket from 'ws';
 export interface Position { x: number; y: number; }
 export type WSMsg =
   | { type: 'join';   userId: string }
-  | { type: 'move';   userId: string; x: number; y: number }
+  | { type: 'move';   userId: string; x: number; y: number, dir: 'up' | 'down' | 'left' | 'right' } 
   | { type: 'leave';  userId: string };
 
 
 export class SpaceManager {
-  private clients = new Map<string, WebSocket>();      // userId → socket
-  private positions = new Map<string, Position>();     // userId → position 
+  private clients = new Map<string, WebSocket>();      // websocket connections of each user //
+  private positions = new Map<string, Position>();     // positions of each user //  
 
-  constructor(public spaceId: string) {}
+  constructor(public spaceId: string) {
+
+  }
 
   addClient(userId: string, ws: WebSocket) {
     this.clients.set(userId, ws);
 
-    // 1️⃣ Send a one-time "snapshot" of everyone's last known locations
+    // Send a one-time "snapshot" of everyone's last known locations // 
     const snapshot = Array.from(this.positions.entries()).map(
       ([uid, pos]) => ({ userId: uid, x: pos.x, y: pos.y })
     );
     ws.send(JSON.stringify({ type: 'snapshot', players: snapshot }));
 
-    // 2️⃣ Notify everyone else that you joined
+    // Notify everyone else that you joined // 
     this.broadcastExcept(userId, { type: 'join', userId });
 
     ws.on('message', raw => this.handleMessage(userId, raw.toString()));
@@ -39,9 +41,10 @@ export class SpaceManager {
       
       // Broadcast move to all other clients
       this.broadcastExcept(userId, msg);
-    }
+    } 
+
   }
- 
+
 
   private broadcastExcept(excludeId: string, msg: any) {
     const raw = JSON.stringify(msg);
@@ -52,6 +55,7 @@ export class SpaceManager {
       }
     } 
   }
+
 
   private removeClient(userId: string) {
     this.clients.delete(userId);

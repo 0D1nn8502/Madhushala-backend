@@ -21,7 +21,7 @@ const user_1 = __importDefault(require("./routes/user"));
 const http_1 = require("http");
 const websocket_1 = require("../websocket");
 const app = (0, express_1.default)();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: "*",

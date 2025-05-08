@@ -8,15 +8,15 @@ const ws_1 = __importDefault(require("ws"));
 class SpaceManager {
     constructor(spaceId) {
         this.spaceId = spaceId;
-        this.clients = new Map(); // userId → socket
-        this.positions = new Map(); // userId → position 
+        this.clients = new Map(); // websocket connections of each user //
+        this.positions = new Map(); // positions of each user //  
     }
     addClient(userId, ws) {
         this.clients.set(userId, ws);
-        // 1️⃣ Send a one-time "snapshot" of everyone's last known locations
+        // Send a one-time "snapshot" of everyone's last known locations // 
         const snapshot = Array.from(this.positions.entries()).map(([uid, pos]) => ({ userId: uid, x: pos.x, y: pos.y }));
         ws.send(JSON.stringify({ type: 'snapshot', players: snapshot }));
-        // 2️⃣ Notify everyone else that you joined
+        // Notify everyone else that you joined // 
         this.broadcastExcept(userId, { type: 'join', userId });
         ws.on('message', raw => this.handleMessage(userId, raw.toString()));
         ws.on('close', () => this.removeClient(userId));

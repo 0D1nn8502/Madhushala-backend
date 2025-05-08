@@ -23,4 +23,28 @@ userRouter.get('/profile', authenticateToken, async (req: Request, res: Response
   }
 });
 
+
+userRouter.get(
+  "/profile/:userId",
+  authenticateToken,          
+  async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    try {
+      // Exclude sensitive fields (email, passwordHash) — keep username/image/desc/spaces
+      const user = await UserModel.findById(userId).select(
+        "-email -passwordHash -__v"
+      );
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return; 
+      }
+      res.status(200).json(user);
+    } catch (error) {
+      console.error("Error fetching other user’s profile:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+
 export default userRouter;

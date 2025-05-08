@@ -33,4 +33,20 @@ userRouter.get('/profile', User_1.authenticateToken, (req, res) => __awaiter(voi
         res.status(500).json({ message: "Internal server error" });
     }
 }));
+userRouter.get("/profile/:userId", User_1.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    try {
+        // Exclude sensitive fields (email, passwordHash) — keep username/image/desc/spaces
+        const user = yield UserModel_1.UserModel.findById(userId).select("-email -passwordHash -__v");
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+        res.status(200).json(user);
+    }
+    catch (error) {
+        console.error("Error fetching other user’s profile:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}));
 exports.default = userRouter;

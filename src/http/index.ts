@@ -7,19 +7,23 @@ import userRouter from "./routes/user";
 import { createServer } from "http";
 import { setupWebSocketServer } from "../websocket";
 
+
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.use(express.json());
+
 
 app.use(cors({
     origin: "*",
     methods: ['GET', 'POST']
 }));
 
+
 // REST endpoints // 
 app.use("/auth", authRouter);
 app.use("/space", spaceRouter);
 app.use("/user", userRouter);
+
 
 async function startServer() {
 
@@ -46,7 +50,6 @@ async function startServer() {
 
         process.exit(1);
     }
-
 }
 
 startServer(); 

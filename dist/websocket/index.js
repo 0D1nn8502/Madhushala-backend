@@ -8,7 +8,6 @@ const managers = new Map();
 function setupWebSocketServer(server) {
     const wss = new ws_1.WebSocketServer({ noServer: true });
     server.on('upgrade', (req, socket, head) => {
-        // Expect URL: ws://host/space-ws/<spaceId>?userId=...
         const url = new URL(req.url, `http://${req.headers.host}`);
         const [, prefix, spaceId] = url.pathname.split('/');
         const userId = url.searchParams.get('userId');
@@ -16,13 +15,13 @@ function setupWebSocketServer(server) {
             socket.destroy();
             return;
         }
-        // Get or create the SpaceManager
+        // Get or create the SpaceManager // 
         let mgr = managers.get(spaceId);
         if (!mgr) {
             mgr = new SpaceManager_1.SpaceManager(spaceId);
             managers.set(spaceId, mgr);
         }
-        // Complete WebSocket handshake and register client
+        // Complete WebSocket handshake and register client // 
         wss.handleUpgrade(req, socket, head, ws => {
             mgr.addClient(userId, ws);
         });
