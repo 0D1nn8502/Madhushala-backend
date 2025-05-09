@@ -15,9 +15,12 @@ app.use(express.json());
 
 app.use(cors({
     origin: "*",
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST'], 
+    allowedHeaders: ['Content-type', 'Authorization'] 
 }));
 
+// "Preflight" requests // 
+app.options('*', cors()); 
 
 // REST endpoints // 
 app.use("/auth", authRouter);
