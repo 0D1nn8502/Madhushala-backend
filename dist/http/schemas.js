@@ -18,7 +18,8 @@ const elementSchema = zod_1.z.object({
     elementName: zod_1.z.string(),
     elementId: zod_1.z.string(),
     x: zod_1.z.number(),
-    y: zod_1.z.number()
+    y: zod_1.z.number(),
+    link: zod_1.z.string().optional()
 });
 // Space Related // 
 exports.createSpaceSchema = zod_1.z.object({

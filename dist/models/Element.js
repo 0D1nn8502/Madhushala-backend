@@ -45,7 +45,9 @@ const SpaceElementSchema = new mongoose_1.Schema({
     elementId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Element', required: true },
     spaceId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Space', required: true },
     x: { type: Number, required: true },
-    y: { type: Number, required: true }
+    y: { type: Number, required: true },
+    link: { type: String, default: null, required: false },
+    hoverText: { type: String, default: null, required: false }
 });
 exports.SpaceElementModel = mongoose_1.default.model('SpaceElement', SpaceElementSchema);
 exports.ElementModel = mongoose_1.default.model('Element', ElementSchema);

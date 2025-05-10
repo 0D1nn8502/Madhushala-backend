@@ -20,7 +20,8 @@ const elementSchema = z.object({
     elementName: z.string(), 
     elementId: z.string(), 
     x: z.number(), 
-    y: z.number() 
+    y: z.number(), 
+    link: z.string().optional() 
 }); 
 
 

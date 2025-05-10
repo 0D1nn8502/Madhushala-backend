@@ -15,6 +15,8 @@ export interface ISpaceElement extends Document {
     spaceId: mongoose.Types.ObjectId; // Reference to the Space
     x: number; // X position in the space
     y: number; // Y position in the space
+    link?: string; 
+    hoverText?: string; 
 }
 
 
@@ -30,7 +32,9 @@ const SpaceElementSchema: Schema = new Schema({
     elementId: {type: Schema.Types.ObjectId, ref: 'Element', required: true},
     spaceId: {type: Schema.Types.ObjectId, ref: 'Space', required: true}, 
     x: {type: Number, required: true}, 
-    y: {type: Number, required: true}  
+    y: {type: Number, required: true}, 
+    link: {type: String, default: null, required: false},   
+    hoverText: {type: String, default: null, required: false}  
 })
 
 

@@ -20,6 +20,7 @@ const cors_1 = __importDefault(require("cors"));
 const Space_1 = require("../../models/Space");
 const UserModel_1 = require("../../models/UserModel");
 const Element_1 = require("../../models/Element");
+const mongoose_1 = __importDefault(require("mongoose"));
 const spaceRouter = express_1.default.Router();
 spaceRouter.use(express_1.default.json());
 spaceRouter.use((0, cors_1.default)());
@@ -106,6 +107,38 @@ spaceRouter.get('/join/:spaceId', User_1.authenticateToken, (req, res) => __awai
     catch (error) {
         console.error("Error joining space:", error);
         res.status(500).json({ message: "Internal server error" });
+    }
+}));
+spaceRouter.delete('/:spaceId', User_1.authenticateToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const spaceId = req.params.spaceId;
+    const userId = new mongodb_1.ObjectId(req.userId);
+    // Validate spaceId
+    if (!mongoose_1.default.Types.ObjectId.isValid(spaceId)) {
+        res.status(400).json({ error: 'Invalid spaceId' });
+        return;
+    }
+    try {
+        const space = yield Space_1.SpaceModel.findById(spaceId);
+        if (!space) {
+            res.status(404).json({ error: 'Space not found' });
+            return;
+        }
+        if (!space.ownerId.equals(userId)) {
+            res.status(403).json({ error: 'Not authorized' });
+            return;
+        }
+        // Delete the space
+        yield Space_1.SpaceModel.findByIdAndDelete(spaceId);
+        // Remove the space reference from *that* owner’s spaces array
+        yield UserModel_1.UserModel.findByIdAndUpdate(userId, { $pull: { spaces: { spaceId: space._id } } });
+        // await SpaceElementModel.deleteMany({ spaceId: space._id });
+        res.status(200).json({ message: 'Space deleted successfully' });
+        return;
+    }
+    catch (error) {
+        console.error('Error deleting space:', error);
+        res.status(500).json({ error: 'Internal server error' });
+        return;
     }
 }));
 // Get Online Spaces // 

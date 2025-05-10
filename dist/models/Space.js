@@ -42,7 +42,8 @@ const SpaceSchema = new mongoose_1.Schema({
     spaceElements: [{
             elementId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Element', required: true },
             x: { type: Number, required: true },
-            y: { type: Number, required: true }
+            y: { type: Number, required: true },
+            link: { type: String, required: false }
         }],
     createdAt: { type: Date, default: Date.now },
     isOnline: { type: Boolean, default: true }

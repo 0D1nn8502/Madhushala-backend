@@ -23,7 +23,8 @@ const SpaceSchema: Schema = new Schema({
     spaceElements: [{
         elementId: { type: Schema.Types.ObjectId, ref: 'Element', required: true },
         x: { type: Number, required: true },
-        y: { type: Number, required: true }
+        y: { type: Number, required: true }, 
+        link: {type: String, required: false}  
     }],
     createdAt: { type: Date, default: Date.now },
     isOnline: {type: Boolean, default: true}  

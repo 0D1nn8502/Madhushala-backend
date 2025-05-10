@@ -25,8 +25,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: "*",
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST', 'DELETE'],
+    allowedHeaders: ['Content-type', 'Authorization']
 }));
+app.options('*', (0, cors_1.default)());
 // REST endpoints // 
 app.use("/auth", auth_1.default);
 app.use("/space", space_1.default);
